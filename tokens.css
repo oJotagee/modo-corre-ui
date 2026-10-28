@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  --ink: #09123c;
+  --ink-2: #3b4466;
+  --mute: #656c8a;
+  --line: #e3e6ef;
+  --brand: #4eb648;
+  --brand-dark: #317d2d;
+  --brand-light: #eaf6e9;
+  --brand-foreground: #ffffff;
+  --hero: #0e0047;
+  --background: #f6f7fb;
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: #317d2d;
+  --primary-foreground: #ffffff;
+  --secondary: #eef0f6;
+  --secondary-foreground: var(--ink);
+  --muted: #eef0f6;
+  --muted-foreground: var(--mute);
+  --accent: var(--brand-light);
+  --accent-foreground: var(--ink);
+  --destructive: #c53030;
+  --border: var(--line);
+  --input: #858ba4;
+  --ring: #449e3f;
+  --radius: 0.75rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: var(--ink-2);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--brand-light);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--brand);
+  --font-public-sans: "Public Sans";
+  --font-archivo: "Archivo";
+}
+.dark {
+  --ink: #eef0f8;
+  --ink-2: #c3c8dc;
+  --mute: #959cb8;
+  --line: #262e52;
+  --brand-dark: #3a9536;
+  --brand-light: #16301f;
+  --background: #0a0f26;
+  --card: #121937;
+  --popover: #161e40;
+  --secondary: #1d254a;
+  --muted: #1d254a;
+  --destructive: #f26b6b;
+  --input: #4a5378;
+  --ring: #5cc556;
+  --sidebar: #0f1530;
+}

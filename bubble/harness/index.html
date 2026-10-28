@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MC UI · harness Bubble</title>
+<style>
+  /* CSS hostil, simulando regras globais de página/plugins Bubble. */
+  body { font-family: "Times New Roman", serif; background: #fffbe6; margin: 16px; }
+  button { background: red; font-family: "Comic Sans MS", cursive; border-radius: 0; }
+  input { border: 3px dashed orange; }
+  * { box-sizing: content-box; }
+  /* Elementos "do Bubble" que NÃO podem ser afetados pelo CSS do plugin. */
+  .bubble-native .flex { color: rgb(0, 128, 0); }
+  .bubble-native .hidden { display: block; }
+  h2 { font-size: 14px; margin: 24px 0 8px; }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .canvas { border: 1px dotted #999; }
+  #log { font: 12px monospace; background: #222; color: #0f0; padding: 8px; height: 160px; overflow: auto; }
+</style>
+<script src="../dist/mc-ui-bubble.js"></script>
+</head>
+<body>
+<h1>Harness MC UI (emula elementos de plugin Bubble)</h1>
+
+<div class="bubble-native">
+  <span id="native-flex" class="flex">texto nativo .flex (deve ficar verde)</span>
+  <span id="native-hidden" class="hidden">texto nativo .hidden (deve aparecer)</span>
+  <button id="native-btn">botão nativo (deve continuar vermelho)</button>
+</div>
+
+<h2>MC Button</h2>
+<div class="row">
+  <div class="canvas" id="btn1" style="width:160px;height:36px"></div>
+  <div class="canvas" id="btn2" style="width:160px;height:36px"></div>
+  <div class="canvas" id="btn3" style="width:160px;height:36px"></div>
+</div>
+
+<h2>MC Badge</h2>
+<div class="row">
+  <div class="canvas" id="badge1" style="width:80px;height:24px"></div>
+  <div class="canvas" id="badge2" style="width:80px;height:24px"></div>
+</div>
+
+<h2>MC Input</h2>
+<div class="row"><div class="canvas" id="input1" style="width:320px;height:60px"></div></div>
+
+<h2>MC Pagination</h2>
+<div class="row"><div class="canvas" id="pag1" style="width:640px;height:40px"></div></div>
+<div class="row"><div class="canvas" id="pag2" style="width:640px;height:40px"></div></div>
+
+<h2>Log de eventos/estados (o que o Bubble receberia)</h2>
+<pre id="log"></pre>
+
+<script>
+  // ----- emulação da API de elementos de plugin do Bubble -----
+  window.bubbleLog = [];
+  function log(msg) {
+    window.bubbleLog.push(msg);
+    var el = document.getElementById("log");
+    el.textContent += msg + "\n";
+    el.scrollTop = el.scrollHeight;
+  }
+  var CODE = {};
+  function makeInstance(id) {
+    var div = document.getElementById(id);
+    var states = {};
+    return {
+      canvas: [div],
+      data: {},
+      states: states,
+      publishState: function (k, v) { states[k] = v; log(id + " state " + k + " = " + JSON.stringify(v)); },
+      triggerEvent: function (e) { log(id + " event " + e); },
+    };
+  }
+  // ----- carrega o MESMO código que será colado no editor de plugins -----
+  async function boot() {
+    var src = await (await fetch("../plugin/element-code.js")).text();
+    var defs = await (await fetch("../plugin/elements.json")).json();
+    window.harness = {};
+    function create(id, component, props) {
+      var fns = new Function(src.split("COMPONENT").join(component) + "\nreturn {initialize: initialize, update: update, reset: reset};")();
+      var inst = makeInstance(id);
+      var def = defs.elements.find(function (e) { return e.component === component; });
+      var defaults = {};
+      def.fields.forEach(function (f) { if ("default" in f) defaults[f.key] = f.default; });
+      fns.initialize(inst, {});
+      var current = Object.assign({ bubble: {} }, defaults, props);
+      fns.update(inst, current, {});
+      window.harness[id] = {
+        inst: inst,
+        set: function (patch) { current = Object.assign({}, current, patch); fns.update(inst, current, {}); },
+        reset: function () { fns.reset(inst, {}); },
+      };
+    }
+    create("btn1", "Button", { label: "Nova categoria", tooltip: "Cadastrar uma nova categoria" });
+    create("btn2", "Button", { label: "Cards", variant: "outline", icon: "layout-grid" });
+    create("btn3", "Button", { label: "Desativar", variant: "destructive", loading: true });
+    create("badge1", "Badge", { label: "Ativa" });
+    create("badge2", "Badge", { label: "Inativa", variant: "secondary" });
+    create("input1", "Input", { placeholder: "Busque pela descrição", type: "search", debounce_ms: 200, icon: "search" });
+    create("pag1", "Pagination", { page: 1, total_pages: 4, summary: "Mostrando 1–12 de 40 categorias" });
+    create("pag2", "Pagination", { page: 5, total_pages: 12, show_numbers: true });
+    // Página controlada pelo "Bubble": o workflow aplica requested_page.
+    ["pag1", "pag2"].forEach(function (id) {
+      var h = window.harness[id];
+      var orig = h.inst.triggerEvent;
+      h.inst.triggerEvent = function (e) {
+        orig(e);
+        if (e === "page_changed") h.set({ page: h.inst.states.requested_page });
+      };
+    });
+    window.harnessReady = true;
+  }
+  boot().catch(function (e) { log("ERRO " + e.message); });
+</script>
+</body>
+</html>

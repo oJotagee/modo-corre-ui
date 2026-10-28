@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MC UI · harness UserMenu</title>
+<style>
+  /* CSS hostil, simulando o Bubble */
+  body { margin: 0; font-family: "Times New Roman", serif; background: #f6f7fb; }
+  button { background: yellow; border: 3px solid red; }
+  header { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 8px; background: #fff; border-bottom: 1px solid #ddd; }
+  header .find { flex: 1; height: 40px; border: 1px solid #ddd; border-radius: 10px; }
+  #menu { flex: none; width: 48px; height: 48px; }
+  /* grupo flutuante do Bubble, para conferir que o menu abre por cima */
+  .floating { position: fixed; top: 0; right: 0; width: 60%; height: 120px; z-index: 1504; background: rgba(0,0,255,.08); pointer-events: none; }
+  #log { font: 12px monospace; background: #222; color: #0f0; padding: 8px; height: 120px; overflow: auto; }
+</style>
+<script src="../dist/mc-ui-bubble.js"></script>
+</head>
+<body>
+<header><div class="find"></div><div id="menu"></div></header>
+<div class="floating"></div>
+<pre id="log"></pre>
+<script>
+  window.bubbleLog = [];
+  function log(m) { bubbleLog.push(m); document.getElementById("log").textContent += m + "\n"; }
+  function blist(arr) { return { length: function () { return arr.length; }, get: function (s, n) { return arr.slice(s, s + n); } }; }
+  (async function () {
+    var src = await (await fetch("../plugin/element-code.js")).text();
+    var fns = new Function(src.split("COMPONENT").join("UserMenu") + "\nreturn {initialize: initialize, update: update};")();
+    var div = document.getElementById("menu");
+    var inst = {
+      canvas: [div], data: {}, states: {},
+      publishState: function (k, v) { inst.states[k] = v; log("state " + k + " = " + JSON.stringify(v)); },
+      triggerEvent: function (e) { log("event " + e); },
+    };
+    fns.initialize(inst, {});
+    var props = {
+      name: "João Guilherme Santos",
+      subtitle: "usuario",
+      avatar_url: null,
+      show_name: false,
+      labels: blist(["Busca expressa", "Chat", "Reportar erro / melhoria", "Avisos globais"]),
+      icons: blist(["zoom-in", "chat", "ticket", "megaphone"]),
+      danger_label: "Sair",
+      bubble: {},
+    };
+    fns.update(inst, props, {});
+    window.harness = { inst: inst, set: function (p) { Object.assign(props, p); fns.update(inst, props, {}); } };
+    window.harnessReady = true;
+  })();
+</script>
+</body>
+</html>
