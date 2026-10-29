@@ -232,6 +232,12 @@
             "eye"
           ],
           "default": "none"
+        },
+        {
+          "key": "max_length",
+          "caption": "Limite de caracteres (0 = sem limite)",
+          "type": "number",
+          "default": 0
         }
       ],
       "reset": true,

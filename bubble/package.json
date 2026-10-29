@@ -9,7 +9,7 @@
     "typecheck": "tsc -p ."
   },
   "dependencies": {
-    "@modo-corre/ui": "0.4.0",
+    "@modo-corre/ui": "0.4.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

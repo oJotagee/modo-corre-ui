@@ -232,6 +232,7 @@ type MCInputProps = {
   accessible_label?: string;
   debounce_ms?: number;
   icon?: string;
+  max_length?: number;
 };
 
 const INPUT_TYPES = ["text", "search", "email", "number", "tel", "url", "password"];
@@ -255,6 +256,8 @@ function MCInput({ emit, ...p }: WithEmit<MCInputProps>) {
   const delay = Number.isFinite(Number(p.debounce_ms)) ? Number(p.debounce_ms) : 300;
   // Ícone à esquerda dentro do campo (ex.: lupa da busca), sem moldura extra.
   const Icon = ICONS[text(p.icon)];
+  // Limite de caracteres na digitação (0 ou vazio = sem limite).
+  const max = Number(p.max_length) > 0 ? Number(p.max_length) : undefined;
 
   return (
     <div className="flex w-full flex-col gap-1">
@@ -268,6 +271,7 @@ function MCInput({ emit, ...p }: WithEmit<MCInputProps>) {
       <Input
         className={Icon ? "pl-8" : undefined}
         type={pick(p.type, INPUT_TYPES, "text")}
+        maxLength={max}
         value={value}
         placeholder={text(p.placeholder) || undefined}
         disabled={bool(p.disabled)}

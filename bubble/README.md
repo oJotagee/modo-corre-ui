@@ -235,7 +235,7 @@ O build lê `tokens.css` e `styles.css` **do pacote instalado** (a versão fixad
 3. Aguarde o npm processar (alguns minutos) e confira `https://cdn.jsdelivr.net/npm/@modo-corre/ui@<versão>/bubble/dist/mc-ui-bubble.js`.
 4. No plugin Bubble, troque a versão na URL do header e publique uma nova versão do plugin.
 
-Histórico: **0.4.1** (a publicar) corrige um bug da 0.4.0 no MC Button: a limpeza de rótulo removia a letra "s" ("Todas" virava "Toda"; "Lista", "Li ta"). **0.4.0** (publicada; plugin 0.4.0) adiciona os elementos MC Textarea, MC Switch, MC Checkbox e MC Breadcrumb (os componentes da biblioteca já existiam e não mudaram) e faz o MC Button tratar rótulo só com espaços ou U+200B como vazio. **0.3.0** (publicada; substitui a 0.2.1, que não chegou a ser publicada) adiciona `DropdownMenu` e `Avatar` à biblioteca (portados do os-panel, `DropdownMenuContent` aceita `container`), o elemento **MC User Menu**, os ícones `menu`, `zoom-in`, `chat`, `ticket`, `megaphone` e `log-out`, logo maior na sidebar (156 px aberto, 52 px recolhido, 140 px na gaveta), rolagem na gaveta mobile (antes a lista passava da altura da tela sem rolar) e o atributo `data-mc-sidebar` no `<html>` enquanto houver um MC Sidebar na página. Também põe o host de portais (`[data-mc-portal]`) com `z-index: 2000`, acima dos grupos flutuantes do Bubble (~1504), que cobriam a gaveta mobile na `estoque`. **0.2.0** adiciona `Sheet` e `Sidebar` à biblioteca e o elemento MC Sidebar. **0.1.3** traz ícones no Button/Input e `reset` no Input. **0.1.2** faz o runtime pedir explicitamente as fontes usadas dentro do Shadow DOM. **0.1.1** foi a primeira com o bundle Bubble. Ela também passou a incluir `tokens.css` e corrigiu o `Switch`, que na 0.1.0 não renderizava (`return;` antes do JSX). O bundle da 0.1.1 foi gerado contra os componentes da 0.1.0 (idênticos para Button, Badge, Input e Pagination), por isso `MCUI.version` mostra `0.1.0`.
+Histórico: **0.4.2** (publicada; plugin 0.5.0 — o Bubble numerou o "minor" como 0.5.0) adiciona o campo `max_length` ao MC Input (bloqueia a digitação além do limite; 0 = sem limite). **0.4.1** (publicada; plugin 0.4.1) corrige um bug da 0.4.0 no MC Button: a limpeza de rótulo removia a letra "s" ("Todas" virava "Toda"; "Lista", "Li ta"). **0.4.0** (publicada; plugin 0.4.0) adiciona os elementos MC Textarea, MC Switch, MC Checkbox e MC Breadcrumb (os componentes da biblioteca já existiam e não mudaram) e faz o MC Button tratar rótulo só com espaços ou U+200B como vazio. **0.3.0** (publicada; substitui a 0.2.1, que não chegou a ser publicada) adiciona `DropdownMenu` e `Avatar` à biblioteca (portados do os-panel, `DropdownMenuContent` aceita `container`), o elemento **MC User Menu**, os ícones `menu`, `zoom-in`, `chat`, `ticket`, `megaphone` e `log-out`, logo maior na sidebar (156 px aberto, 52 px recolhido, 140 px na gaveta), rolagem na gaveta mobile (antes a lista passava da altura da tela sem rolar) e o atributo `data-mc-sidebar` no `<html>` enquanto houver um MC Sidebar na página. Também põe o host de portais (`[data-mc-portal]`) com `z-index: 2000`, acima dos grupos flutuantes do Bubble (~1504), que cobriam a gaveta mobile na `estoque`. **0.2.0** adiciona `Sheet` e `Sidebar` à biblioteca e o elemento MC Sidebar. **0.1.3** traz ícones no Button/Input e `reset` no Input. **0.1.2** faz o runtime pedir explicitamente as fontes usadas dentro do Shadow DOM. **0.1.1** foi a primeira com o bundle Bubble. Ela também passou a incluir `tokens.css` e corrigiu o `Switch`, que na 0.1.0 não renderizava (`return;` antes do JSX). O bundle da 0.1.1 foi gerado contra os componentes da 0.1.0 (idênticos para Button, Badge, Input e Pagination), por isso `MCUI.version` mostra `0.1.0`.
 
 Fixe sempre uma versão exata na URL (nunca `@latest`): o Bubble só muda quando alguém atualiza o plugin conscientemente.
 
@@ -245,10 +245,10 @@ Fixe sempre uma versão exata na URL (nunca `@latest`): o Bubble só muda quando
 | --- | --- |
 | Nome | `Modo Corre UI` (privado, plataforma Web, categoria Technical) |
 | Plugin id | `1793127801545x177614502237306880` |
-| Versão do plugin | `0.3.0` — header aponta para `@modo-corre/ui@0.3.0` (0.0.1 → 0.1.0 → 0.2.0 → 0.3.0) |
+| Versão do plugin | `0.5.0` — header aponta para `@modo-corre/ui@0.4.2` (0.0.1 → 0.1.0 → 0.2.0 → 0.3.0 → 0.4.0 → 0.4.1 → 0.5.0) |
 | Apps autorizados | `devmodocorre` |
-| Instalado em | `devmodocorre`, branch `dev-joao-guilherme` (`83mll`), plugin 0.3.0 |
-| Tipos de elemento | `MC Button` `…-AAC`, `MC Badge` `…-AAL`, `MC Input` `…-AAP`, `MC Pagination` `…-AAb`, `MC Sidebar` `…-AAm`, `MC User Menu` `…-AAx` (estado `…-ABF`, evento `…-ABG`) |
+| Instalado em | `devmodocorre`, branch `dev-joao-guilherme` (`83mll`), plugin 0.5.0 |
+| Tipos de elemento | `MC Button` `…-AAC`, `MC Badge` `…-AAL`, `MC Input` `…-AAP`, `MC Pagination` `…-AAb`, `MC Sidebar` `…-AAm`, `MC User Menu` `…-AAx` (estado `…-ABF`, evento `…-ABG`), `MC Breadcrumb` `…-ABH`, `MC Switch` `…-ABK` (estado `…-ABO`, evento `…-ABP`), `MC Checkbox` `…-ABQ`, `MC Textarea` `…-ABW` (estado `…-ABh`) |
 
 Campos, estados, eventos e código conferidos no editor contra `plugin/elements.json` e `plugin/element-code.js` após recarregar a página.
 
@@ -357,6 +357,7 @@ Campos `label`, `variant` (`default`, `secondary`, `destructive`, `outline`, `gh
 | `error_message` | text | Mostrada abaixo do campo, ligada por `aria-describedby`; também marca o campo como inválido |
 | `accessible_label` | text | `aria-label` (cai no placeholder se vazio) |
 | `debounce_ms` | number | Atraso do evento `value_changed` (padrão 300) |
+| `max_length` | number (estático) | Limite de caracteres na digitação; 0 = sem limite (desde a 0.4.2) |
 
 Estado: **value** (atualizado a cada tecla). Eventos: **value_changed** (após o atraso), **submitted** (Enter).
 
@@ -439,6 +440,12 @@ Savepoint antes: `1793279113059`. Originais ocultados, não excluídos.
 | MC Button E (`bZWFT`, Ativar/Desativar no card) | MC Switch `bZWWM` "Ativa" | ligado = status da categoria; workflow `bZWWO` → `Make changes` status = `MCSwitch A's Ligado` |
 
 Checkbox: a página não tinha nenhum; o elemento fica disponível no plugin.
+
+**Revisão a pedido (29/10/2026):**
+- O botão **Desativar/Ativar** voltou aos cards (MC Button E `bZWFT` visível, com o workflow original `bZVcV`); o MC Switch `bZWWM` ficou oculto (o workflow `bZWWO` continua lá, sem efeito enquanto ele está oculto).
+- A descrição voltou para o **MC Input B** (`bZWHg`, uma linha), porque ela é basicamente o nome da categoria; o MC Textarea `bZWWK` ficou oculto e os workflows de criar/editar voltaram a ler `MCInput B's Valor`.
+- **Limite de 60 caracteres** feito no Bubble, sem nova versão da biblioteca: acima de 60, o MC Input B mostra "Use no máximo 60 caracteres." (e cresce para 58 px para a mensagem caber) e o Salvar (`bZWFb`) fica desabilitado. Desde o plugin 0.5.0 o MC Input B também tem **Limite de caracteres = 60** (campo `ABj`), que impede digitar além disso; a mensagem e o Salvar desabilitado continuam valendo para descrições antigas com mais de 60 caracteres. Testado: digitando 70 caracteres o campo para em 60; a busca (`bZWHe`) segue sem limite.
+- Paginação: já era o **MC Pagination** (`bZVjK`); o "Mostrando 1–2 de 2 categorias" à esquerda continua sendo o texto do Bubble (`Text NZ`).
 
 Testado no Chrome: breadcrumb com link para `catalogo`; Switch desliga/religa "categoria teste" (badge e contadores Ativas/Inativas acompanham; voltou ao estado original); Editar abre o Textarea preenchido e Salvar sem mudanças mantém o nome; Nova categoria abre o Textarea vazio. Uma primeira tentativa do Switch numa aba aberta antes da publicação (o Bubble avisava "esta página foi atualizada") travou a aba; numa aba recém-carregada não se repetiu.
 
