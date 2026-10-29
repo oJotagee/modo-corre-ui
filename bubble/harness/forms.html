@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MC UI · harness Textarea/Switch/Checkbox/Breadcrumb</title>
+<style>
+  /* CSS hostil, simulando o Bubble */
+  body { margin: 0; padding: 24px; font-family: "Times New Roman", serif; background: #f6f7fb; display: grid; gap: 16px; }
+  textarea, input, label, a { color: red !important; font-size: 30px; border: 3px dashed red; }
+  .slot { background: #fff; border: 1px solid #ddd; }
+  #log { font: 12px monospace; background: #222; color: #0f0; padding: 8px; height: 140px; overflow: auto; }
+</style>
+<script src="../dist/mc-ui-bubble.js"></script>
+</head>
+<body>
+<div id="bc" class="slot" style="width:360px;height:24px"></div>
+<div id="ta" class="slot" style="width:360px;height:110px"></div>
+<div id="sw" class="slot" style="width:200px;height:24px"></div>
+<div id="cb" class="slot" style="width:200px;height:24px"></div>
+<div id="btn" class="slot" style="width:40px;height:40px"></div>
+<pre id="log"></pre>
+<script>
+  window.bubbleLog = [];
+  function log(m) { bubbleLog.push(m); var el = document.getElementById("log"); el.textContent += m + "\n"; }
+  function blist(arr) { return { length: function () { return arr.length; }, get: function (s, n) { return arr.slice(s, s + n); } }; }
+  window.harness = {};
+  (async function () {
+    var src = await (await fetch("../plugin/element-code.js")).text();
+    function create(id, component, props) {
+      var fns = new Function(src.split("COMPONENT").join(component) + "\nreturn {initialize: initialize, update: update, reset: reset};")();
+      var inst = {
+        canvas: [document.getElementById(id)], data: {}, states: {},
+        publishState: function (k, v) { inst.states[k] = v; log(id + " state " + k + " = " + JSON.stringify(v)); },
+        triggerEvent: function (e) { log(id + " event " + e); },
+      };
+      fns.initialize(inst, {});
+      props.bubble = {};
+      fns.update(inst, props, {});
+      window.harness[id] = { inst: inst, set: function (p) { Object.assign(props, p); fns.update(inst, props, {}); }, reset: function () { fns.reset(inst, {}); } };
+    }
+    create("bc", "Breadcrumb", { labels: blist(["Catálogo", "Categoria"]), hrefs: blist(["catalogo", ""]) });
+    create("ta", "Textarea", { value: "Descrição inicial", placeholder: "Descrição da categoria", rows: 3, max_length: 120, debounce_ms: 100 });
+    create("sw", "Switch", { checked: true, label: "Categoria ativa" });
+    create("cb", "Checkbox", { checked: false, label: "Mostrar inativas" });
+    // Campo vazio no Bubble volta ao padrão; U+200B deve valer como "sem texto".
+    create("btn", "Button", { label: "​", icon: "menu", variant: "ghost", tooltip: "Abrir menu", full_width: true });
+    window.harnessReady = true;
+  })();
+</script>
+</body>
+</html>

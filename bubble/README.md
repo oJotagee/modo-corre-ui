@@ -235,7 +235,7 @@ O build lê `tokens.css` e `styles.css` **do pacote instalado** (a versão fixad
 3. Aguarde o npm processar (alguns minutos) e confira `https://cdn.jsdelivr.net/npm/@modo-corre/ui@<versão>/bubble/dist/mc-ui-bubble.js`.
 4. No plugin Bubble, troque a versão na URL do header e publique uma nova versão do plugin.
 
-Histórico: **0.3.0** (a publicar; substitui a 0.2.1, que não chegou a ser publicada) adiciona `DropdownMenu` e `Avatar` à biblioteca (portados do os-panel, `DropdownMenuContent` aceita `container`), o elemento **MC User Menu**, os ícones `menu`, `zoom-in`, `chat`, `ticket`, `megaphone` e `log-out`, logo maior na sidebar (156 px aberto, 52 px recolhido, 140 px na gaveta), rolagem na gaveta mobile (antes a lista passava da altura da tela sem rolar) e o atributo `data-mc-sidebar` no `<html>` enquanto houver um MC Sidebar na página. Também põe o host de portais (`[data-mc-portal]`) com `z-index: 2000`, acima dos grupos flutuantes do Bubble (~1504), que cobriam a gaveta mobile na `estoque`. **0.2.0** adiciona `Sheet` e `Sidebar` à biblioteca e o elemento MC Sidebar. **0.1.3** traz ícones no Button/Input e `reset` no Input. **0.1.2** faz o runtime pedir explicitamente as fontes usadas dentro do Shadow DOM. **0.1.1** foi a primeira com o bundle Bubble. Ela também passou a incluir `tokens.css` e corrigiu o `Switch`, que na 0.1.0 não renderizava (`return;` antes do JSX). O bundle da 0.1.1 foi gerado contra os componentes da 0.1.0 (idênticos para Button, Badge, Input e Pagination), por isso `MCUI.version` mostra `0.1.0`.
+Histórico: **0.4.1** (a publicar) corrige um bug da 0.4.0 no MC Button: a limpeza de rótulo removia a letra "s" ("Todas" virava "Toda"; "Lista", "Li ta"). **0.4.0** (publicada; plugin 0.4.0) adiciona os elementos MC Textarea, MC Switch, MC Checkbox e MC Breadcrumb (os componentes da biblioteca já existiam e não mudaram) e faz o MC Button tratar rótulo só com espaços ou U+200B como vazio. **0.3.0** (publicada; substitui a 0.2.1, que não chegou a ser publicada) adiciona `DropdownMenu` e `Avatar` à biblioteca (portados do os-panel, `DropdownMenuContent` aceita `container`), o elemento **MC User Menu**, os ícones `menu`, `zoom-in`, `chat`, `ticket`, `megaphone` e `log-out`, logo maior na sidebar (156 px aberto, 52 px recolhido, 140 px na gaveta), rolagem na gaveta mobile (antes a lista passava da altura da tela sem rolar) e o atributo `data-mc-sidebar` no `<html>` enquanto houver um MC Sidebar na página. Também põe o host de portais (`[data-mc-portal]`) com `z-index: 2000`, acima dos grupos flutuantes do Bubble (~1504), que cobriam a gaveta mobile na `estoque`. **0.2.0** adiciona `Sheet` e `Sidebar` à biblioteca e o elemento MC Sidebar. **0.1.3** traz ícones no Button/Input e `reset` no Input. **0.1.2** faz o runtime pedir explicitamente as fontes usadas dentro do Shadow DOM. **0.1.1** foi a primeira com o bundle Bubble. Ela também passou a incluir `tokens.css` e corrigiu o `Switch`, que na 0.1.0 não renderizava (`return;` antes do JSX). O bundle da 0.1.1 foi gerado contra os componentes da 0.1.0 (idênticos para Button, Badge, Input e Pagination), por isso `MCUI.version` mostra `0.1.0`.
 
 Fixe sempre uma versão exata na URL (nunca `@latest`): o Bubble só muda quando alguém atualiza o plugin conscientemente.
 
@@ -245,10 +245,10 @@ Fixe sempre uma versão exata na URL (nunca `@latest`): o Bubble só muda quando
 | --- | --- |
 | Nome | `Modo Corre UI` (privado, plataforma Web, categoria Technical) |
 | Plugin id | `1793127801545x177614502237306880` |
-| Versão do plugin | `0.2.0` — header aponta para `@modo-corre/ui@0.2.0` (0.0.1 → 0.1.0 → 0.2.0) |
+| Versão do plugin | `0.3.0` — header aponta para `@modo-corre/ui@0.3.0` (0.0.1 → 0.1.0 → 0.2.0 → 0.3.0) |
 | Apps autorizados | `devmodocorre` |
-| Instalado em | `devmodocorre`, branch `dev-joao-guilherme` (`83mll`), plugin 0.2.0 |
-| Tipos de elemento | `MC Button` `…-AAC`, `MC Badge` `…-AAL`, `MC Input` `…-AAP`, `MC Pagination` `…-AAb`, `MC Sidebar` `…-AAm`, `MC User Menu` (criado no editor, ainda não publicado) |
+| Instalado em | `devmodocorre`, branch `dev-joao-guilherme` (`83mll`), plugin 0.3.0 |
+| Tipos de elemento | `MC Button` `…-AAC`, `MC Badge` `…-AAL`, `MC Input` `…-AAP`, `MC Pagination` `…-AAb`, `MC Sidebar` `…-AAm`, `MC User Menu` `…-AAx` (estado `…-ABF`, evento `…-ABG`) |
 
 Campos, estados, eventos e código conferidos no editor contra `plugin/elements.json` e `plugin/element-code.js` após recarregar a página.
 
@@ -397,6 +397,51 @@ Avatar com o menu da conta, no padrão do `UserMenu` do os-panel (`DropdownMenu`
 
 Estado: **selected_item** (rótulo escolhido). Evento: **item_selected**. O elemento não sabe o que cada item faz: os workflows do Bubble decidem (`Only when MC User Menu's Item escolhido is "Chat"` → mesmas ações do botão original).
 
+### MC Textarea
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| `value` | text | Valor inicial/dinâmico (substitui o digitado) |
+| `placeholder` | text | |
+| `rows` | number (estático) | Linhas visíveis (padrão 3); o campo ocupa a altura do elemento |
+| `max_length` | number (estático) | 0 = sem limite; com limite mostra o contador "n/máx" |
+| `disabled` / `invalid` | yes/no | |
+| `error_message` | text | Texto vermelho abaixo; também marca o campo como inválido |
+| `accessible_label` | text | `aria-label` (cai no placeholder) |
+| `debounce_ms` | number (estático) | Atraso do evento (padrão 300) |
+
+Estado: **value**. Evento: **value_changed**. Tem função de reset (marcada no editor).
+
+### MC Switch e MC Checkbox
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| `checked` | yes/no | Valor inicial/dinâmico |
+| `label` | text | Texto ao lado; clicar nele também alterna |
+| `disabled` | yes/no | |
+
+Estado: **checked**. Evento: **changed** (o estado já vem atualizado). O elemento não grava nada: o workflow decide o que fazer com o novo valor. Têm função de reset.
+
+### MC Breadcrumb
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| `labels` | lista de texto | O último item é a página atual (sem link) |
+| `hrefs` | lista de texto | Mesma posição dos rótulos; vazio = texto sem link |
+
+Sem estados nem eventos.
+
+### Fase 3 aplicada na `catalogo-categoria` (plugin 0.4.0)
+
+Savepoint antes: `1793279113059`. Originais ocultados, não excluídos.
+
+| Antes | Depois | Ligação |
+| --- | --- | --- |
+| `Group guia` (`bZTRF0`: Catálogo › Categoria) | MC Breadcrumb `bZWWI` | rótulos `Catálogo|Categoria`, destino `catalogo` |
+| MC Input B (`bZWHg`, descrição no popup) | MC Textarea `bZWWK` | valor = descrição do popup; desabilitado em "visualizar"; `Create a new` (`bZTTV0`) e `Make changes` (`bZTTZ0`) leem `MCTextarea A's Valor` |
+| MC Button E (`bZWFT`, Ativar/Desativar no card) | MC Switch `bZWWM` "Ativa" | ligado = status da categoria; workflow `bZWWO` → `Make changes` status = `MCSwitch A's Ligado` |
+
+Checkbox: a página não tinha nenhum; o elemento fica disponível no plugin.
+
+Testado no Chrome: breadcrumb com link para `catalogo`; Switch desliga/religa "categoria teste" (badge e contadores Ativas/Inativas acompanham; voltou ao estado original); Editar abre o Textarea preenchido e Salvar sem mudanças mantém o nome; Nova categoria abre o Textarea vazio. Uma primeira tentativa do Switch numa aba aberta antes da publicação (o Bubble avisava "esta página foi atualizada") travou a aba; numa aba recém-carregada não se repetiu.
+
 ## Menu lateral: option set `MenuItem` + reusável `MC Menu`
 
 **Por que assim:** os menus antigos (`Menu Lateral` `bTHFF` e `Menu Lateral Dinamico` `bVklv0`) repetiam grupos por perfil com condicionais de visibilidade. Agora a lista de itens é dado (option set) e a regra de quem vê o quê continua **numa expressão do Bubble**: o componente só recebe o que já pode ser mostrado.
@@ -422,6 +467,27 @@ O lado direito do header (busca, ícones, usuário, sair) é o reusável `Menu S
 Testado em `version-83mll` no Chrome (usuário com perfil USUARIO, sem acessos BANKING/ALERTA): itens filtrados corretamente (Banking e Central de alertas ocultos), item ativo nas duas páginas, recolher/expandir com a preferência mantida entre páginas, conteúdo e header acompanhando 240/72 px, celular (390 px) com hambúrguer, gaveta abrindo/fechando (Esc e X) e desmontando ao fechar. Outros perfis não foram testados (exigiria logar como outro usuário).
 
 Pendências/decisões: VENDEDOR leva Banking/Comercial/Alertas para `comercial` (fiel ao clique do menu antigo, parece provisório); itens sem página (Investidores, Investidor, Vendas) aparecem com `#`; o widget "Chat interno" é arrastável e global, não faz parte do menu.
+
+## Header no celular (reusável `Menu Superior`)
+
+O header é o HTML `HTML D` (`#mc-topbar`, `bZNRM`), que desenha busca, ícones, avatar e sair e repassa cada clique para o elemento original do Bubble (que tem o workflow). No desktop nada mudou. Abaixo de 768 px a linha fica: **hambúrguer · busca "Ir para a página" · avatar com menu**.
+
+| Peça | Id | O que faz |
+| --- | --- | --- |
+| `MC Button` `mc-m-menu` | `bZWQe` | ícone `menu`, ghost, visível só com `Current page width < 768`. Workflow `bZWQi`: *Run javascript* `window.dispatchEvent(new Event('mcui:sidebar-open'))`. O CSS do header o esconde nas páginas sem MC Sidebar (`html:not([data-mc-sidebar])`), onde ele não teria o que abrir. |
+| `MC User Menu` `mc-m-user` | `bZWQg` | nome = `Current User's nome`, subtítulo = perfil; itens Busca expressa, Chat, Reportar erro / melhoria e **Avisos globais só com acesso DEV** (mesma regra do botão original); "Sair" em vermelho. Visível só abaixo de 768 px. |
+| Workflow do menu | `bZWQl` → `bZWQn` | *Run javascript* que clica no mesmo alvo do header HTML: `mc-old-lupa`, `btn_abrir_chat`, `btn_abrir_ticket`, `btn_abrir_avisos` ou `mtb-out` (que abre a confirmação de saída existente). Nenhum workflow foi duplicado. |
+| CSS em `HTML D` | — | três regras novas: os dois ids acima saem da regra que tira os elementos antigos do layout; `#mtb .acts` some abaixo de 768 px; o hambúrguer some sem `data-mc-sidebar`. O resto do HTML/JS ficou idêntico. |
+
+Dois detalhes descobertos no teste:
+- O `Group DZZZ` (`#glass`) quebra linha no celular e o `#mc-topbar` ocupa `flex-basis: 100%`; abaixo de 768 px o CSS passa o topbar para `flex: 1 1 0%` e manda `#mc-avisos` (faixa de avisos globais) para a linha de baixo.
+- Campo de texto vazio em elemento de plugin volta ao **valor padrão do campo** ("Botão"). O hambúrguer usa um espaço de largura zero (U+200B) como texto; o nome acessível vem do tooltip "Abrir menu". Para dispensar esse truque, o runtime pode passar a ignorar rótulos só com espaços numa próxima versão.
+
+Testado no Chrome (390 px, usuário USUARIO sem acesso DEV): linha única na catalogo-categoria e na estoque; Busca expressa, Chat ("Suporte IA") e Reportar erro abrem os popups originais; Sair abre a confirmação existente e Cancelar fecha sem deslogar; hambúrguer abre a gaveta acima do header flutuante; a gaveta rola até o último item. Na catalogo-tag (menu antigo) o hambúrguer fica oculto e o avatar aparece. No desktop o header continua igual.
+
+Com isso o MC Sidebar das páginas piloto passou a `mobile_trigger = no` (o botão fixo do próprio componente sumiu). Saíram também os ajustes que ele exigia: `padding_top` 56 px do `Group container` da catalogo-categoria e a largura `calc(100% - 56px)` do header da estoque no celular (agora 100%).
+
+Como o `Menu Superior` é usado em todas as páginas, o menu do avatar no celular vale para o app inteiro na branch; o hambúrguer só aparece onde há MC Sidebar.
 
 ## Conectar aos workflows (exemplos das páginas de catálogo)
 

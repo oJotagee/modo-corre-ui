@@ -7,7 +7,14 @@ import {
   AvatarFallback,
   AvatarImage,
   Badge,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
   Button,
+  Checkbox,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -34,6 +41,8 @@ import {
   SidebarHeader,
   SidebarNav,
   SidebarNavLink,
+  Switch,
+  Textarea,
 } from "@modo-corre/ui";
 import { createPortal } from "react-dom";
 import {
@@ -171,6 +180,9 @@ type MCButtonProps = {
 };
 
 function MCButton({ emit, ...p }: WithEmit<MCButtonProps>) {
+  // O Bubble devolve o valor padrão do campo quando ele fica vazio; um rótulo
+  // só com espaços (ou espaço de largura zero) vale como "sem texto".
+  const label = text(p.label).replace(/[\s\u200b]+/g, " ").trim();
   const loading = bool(p.loading);
   const Icon = ICONS[text(p.icon)];
   const iconEnd = p.icon_position === "end";
@@ -183,13 +195,13 @@ function MCButton({ emit, ...p }: WithEmit<MCButtonProps>) {
       disabled={bool(p.disabled) || loading}
       aria-busy={loading || undefined}
       title={text(p.tooltip) || undefined}
-      aria-label={!text(p.label) ? text(p.tooltip) || undefined : undefined}
+      aria-label={!label ? text(p.tooltip) || undefined : undefined}
       className={bool(p.full_width) ? "w-full" : undefined}
       onClick={() => emit("clicked")}
     >
       {loading && <Loader2Icon className="animate-spin" data-icon="inline-start" aria-hidden />}
       {!iconEnd && icon}
-      {text(p.label)}
+      {label}
       {iconEnd && icon}
     </Button>
   );
@@ -283,6 +295,153 @@ function MCInput({ emit, ...p }: WithEmit<MCInputProps>) {
         </p>
       )}
     </div>
+  );
+}
+
+// ---------------------------------------------------------------- Textarea
+
+type MCTextareaProps = {
+  value?: string;
+  placeholder?: string;
+  rows?: number;
+  max_length?: number;
+  disabled?: boolean;
+  invalid?: boolean;
+  error_message?: string;
+  accessible_label?: string;
+  debounce_ms?: number;
+};
+
+function MCTextarea({ emit, ...p }: WithEmit<MCTextareaProps>) {
+  const external = text(p.value);
+  const [value, setValue] = React.useState(external);
+  const timer = React.useRef<number | undefined>(undefined);
+  const errorId = React.useId();
+
+  // Mesmo contrato do MC Input: o valor do Bubble substitui o digitado.
+  React.useEffect(() => {
+    setValue(external);
+    emit(null, { value: external });
+  }, [external]);
+  React.useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  const error = text(p.error_message);
+  const invalid = bool(p.invalid) || error.length > 0;
+  const delay = Number.isFinite(Number(p.debounce_ms)) ? Number(p.debounce_ms) : 300;
+  const rows = Number(p.rows) > 0 ? Number(p.rows) : 3;
+  const max = Number(p.max_length) > 0 ? Number(p.max_length) : undefined;
+
+  return (
+    <div className="flex size-full flex-col gap-1">
+      <Textarea
+        className="min-h-0 flex-1 resize-none [field-sizing:fixed]"
+        rows={rows}
+        maxLength={max}
+        value={value}
+        placeholder={text(p.placeholder) || undefined}
+        disabled={bool(p.disabled)}
+        aria-label={text(p.accessible_label) || text(p.placeholder) || undefined}
+        aria-invalid={invalid || undefined}
+        aria-describedby={error ? errorId : undefined}
+        onChange={(e) => {
+          const next = e.currentTarget.value;
+          setValue(next);
+          emit(null, { value: next });
+          window.clearTimeout(timer.current);
+          timer.current = window.setTimeout(() => emit("value_changed", { value: next }), delay);
+        }}
+      />
+      {(error || max) && (
+        <div className="flex justify-between gap-2 text-xs">
+          <p id={errorId} className="text-destructive">
+            {error}
+          </p>
+          {max && (
+            <span className="text-muted-foreground tabular-nums">
+              {value.length}/{max}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------- Switch / Checkbox
+
+type MCToggleProps = { checked?: boolean; label?: string; disabled?: boolean };
+
+// Switch e Checkbox têm o mesmo contrato: o Bubble define o valor inicial,
+// o clique publica "checked" e dispara "changed"; o workflow decide o resto.
+function useToggle(emit: Emit, p: MCToggleProps) {
+  const external = bool(p.checked);
+  const [checked, setChecked] = React.useState(external);
+  React.useEffect(() => {
+    setChecked(external);
+    emit(null, { checked: external });
+  }, [external]);
+  const onCheckedChange = (next: boolean) => {
+    setChecked(next);
+    emit("changed", { checked: next });
+  };
+  return { checked, onCheckedChange };
+}
+
+function MCSwitch({ emit, ...p }: WithEmit<MCToggleProps>) {
+  const toggle = useToggle(emit, p);
+  const label = text(p.label);
+  return (
+    <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground has-disabled:cursor-not-allowed has-disabled:opacity-50">
+      <Switch {...toggle} disabled={bool(p.disabled)} aria-label={label ? undefined : "Alternar"} />
+      {label}
+    </label>
+  );
+}
+
+function MCCheckbox({ emit, ...p }: WithEmit<MCToggleProps>) {
+  const toggle = useToggle(emit, p);
+  const label = text(p.label);
+  return (
+    <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground has-disabled:cursor-not-allowed has-disabled:opacity-50">
+      <Checkbox {...toggle} disabled={bool(p.disabled)} aria-label={label ? undefined : "Marcar"} />
+      {label}
+    </label>
+  );
+}
+
+// ---------------------------------------------------------------- Breadcrumb
+
+type MCBreadcrumbProps = { labels?: unknown; hrefs?: unknown };
+
+// O último item é a página atual (sem link); item sem destino vira texto.
+function MCBreadcrumb({ emit: _emit, ...p }: WithEmit<MCBreadcrumbProps>) {
+  const labels = asList(p.labels);
+  const hrefs = asList(p.hrefs);
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        {labels.map((label, i) => {
+          const last = i === labels.length - 1;
+          const href = hrefs[i] ?? "";
+          return (
+            <React.Fragment key={`${label}-${i}`}>
+              <BreadcrumbItem>
+                {last ? (
+                  <BreadcrumbPage>{label}</BreadcrumbPage>
+                ) : href ? (
+                  <BreadcrumbLink href={href} className="text-primary hover:underline">
+                    {label}
+                  </BreadcrumbLink>
+                ) : (
+                  <span>{label}</span>
+                )}
+              </BreadcrumbItem>
+              {!last && <BreadcrumbSeparator />}
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }
 
@@ -644,6 +803,10 @@ const COMPONENTS = {
   Pagination: MCPagination,
   Sidebar: MCSidebar,
   UserMenu: MCUserMenu,
+  Textarea: MCTextarea,
+  Switch: MCSwitch,
+  Checkbox: MCCheckbox,
+  Breadcrumb: MCBreadcrumb,
 } as const;
 
 type ComponentName = keyof typeof COMPONENTS;

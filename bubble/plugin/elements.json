@@ -5,29 +5,152 @@
     {
       "name": "MC Button",
       "component": "Button",
-      "defaultSize": { "width": 140, "height": 36 },
+      "defaultSize": {
+        "width": 140,
+        "height": 36
+      },
       "fields": [
-        { "key": "label", "caption": "Texto", "type": "text", "default": "Botão" },
-        { "key": "variant", "caption": "Variante", "type": "dropdown", "choices": ["default", "outline", "secondary", "ghost", "destructive", "link"], "default": "default" },
-        { "key": "size", "caption": "Tamanho", "type": "dropdown", "choices": ["default", "xs", "sm", "lg"], "default": "default" },
-        { "key": "disabled", "caption": "Desabilitado", "type": "yes / no", "default": false },
-        { "key": "loading", "caption": "Carregando", "type": "yes / no", "default": false },
-        { "key": "tooltip", "caption": "Tooltip", "type": "text", "optional": true },
-        { "key": "full_width", "caption": "Largura total", "type": "yes / no", "default": false },
-        { "key": "icon", "caption": "Ícone", "type": "dropdown", "choices": ["none", "plus", "pencil", "trash", "layout-grid", "list", "search", "filter", "eye", "check", "x", "save", "download", "upload", "refresh", "power", "chevron-left", "chevron-right", "menu", "zoom-in", "chat", "ticket", "megaphone", "log-out"], "default": "none" },
-        { "key": "icon_position", "caption": "Posição do ícone", "type": "dropdown", "choices": ["start", "end"], "default": "start" }
+        {
+          "key": "label",
+          "caption": "Texto",
+          "type": "text",
+          "default": "Botão"
+        },
+        {
+          "key": "variant",
+          "caption": "Variante",
+          "type": "dropdown",
+          "choices": [
+            "default",
+            "outline",
+            "secondary",
+            "ghost",
+            "destructive",
+            "link"
+          ],
+          "default": "default"
+        },
+        {
+          "key": "size",
+          "caption": "Tamanho",
+          "type": "dropdown",
+          "choices": [
+            "default",
+            "xs",
+            "sm",
+            "lg"
+          ],
+          "default": "default"
+        },
+        {
+          "key": "disabled",
+          "caption": "Desabilitado",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "loading",
+          "caption": "Carregando",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "tooltip",
+          "caption": "Tooltip",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "full_width",
+          "caption": "Largura total",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "icon",
+          "caption": "Ícone",
+          "type": "dropdown",
+          "choices": [
+            "none",
+            "plus",
+            "pencil",
+            "trash",
+            "layout-grid",
+            "list",
+            "search",
+            "filter",
+            "eye",
+            "check",
+            "x",
+            "save",
+            "download",
+            "upload",
+            "refresh",
+            "power",
+            "chevron-left",
+            "chevron-right",
+            "menu",
+            "zoom-in",
+            "chat",
+            "ticket",
+            "megaphone",
+            "log-out"
+          ],
+          "default": "none"
+        },
+        {
+          "key": "icon_position",
+          "caption": "Posição do ícone",
+          "type": "dropdown",
+          "choices": [
+            "start",
+            "end"
+          ],
+          "default": "start"
+        }
       ],
       "states": [],
-      "events": [{ "key": "clicked", "caption": "MC Button é clicado" }]
+      "events": [
+        {
+          "key": "clicked",
+          "caption": "MC Button é clicado"
+        }
+      ]
     },
     {
       "name": "MC Badge",
       "component": "Badge",
-      "defaultSize": { "width": 80, "height": 24 },
+      "defaultSize": {
+        "width": 80,
+        "height": 24
+      },
       "fields": [
-        { "key": "label", "caption": "Texto", "type": "text", "default": "Ativa" },
-        { "key": "variant", "caption": "Variante", "type": "dropdown", "choices": ["default", "secondary", "destructive", "outline", "ghost", "link"], "default": "default" },
-        { "key": "dot", "caption": "Mostrar ponto", "type": "yes / no", "default": true }
+        {
+          "key": "label",
+          "caption": "Texto",
+          "type": "text",
+          "default": "Ativa"
+        },
+        {
+          "key": "variant",
+          "caption": "Variante",
+          "type": "dropdown",
+          "choices": [
+            "default",
+            "secondary",
+            "destructive",
+            "outline",
+            "ghost",
+            "link"
+          ],
+          "default": "default"
+        },
+        {
+          "key": "dot",
+          "caption": "Mostrar ponto",
+          "type": "yes / no",
+          "default": true
+        }
       ],
       "states": [],
       "events": []
@@ -35,72 +158,477 @@
     {
       "name": "MC Input",
       "component": "Input",
-      "defaultSize": { "width": 280, "height": 36 },
+      "defaultSize": {
+        "width": 280,
+        "height": 36
+      },
       "fields": [
-        { "key": "value", "caption": "Valor inicial", "type": "text", "optional": true },
-        { "key": "placeholder", "caption": "Placeholder", "type": "text", "optional": true },
-        { "key": "type", "caption": "Tipo", "type": "dropdown", "choices": ["text", "search", "email", "number", "tel", "url", "password"], "default": "text" },
-        { "key": "disabled", "caption": "Desabilitado", "type": "yes / no", "default": false },
-        { "key": "invalid", "caption": "Inválido", "type": "yes / no", "default": false },
-        { "key": "error_message", "caption": "Mensagem de erro", "type": "text", "optional": true },
-        { "key": "accessible_label", "caption": "Rótulo acessível", "type": "text", "optional": true },
-        { "key": "debounce_ms", "caption": "Atraso do evento (ms)", "type": "number", "default": 300 },
-        { "key": "icon", "caption": "Ícone", "type": "dropdown", "choices": ["none", "search", "filter", "pencil", "eye"], "default": "none" }
+        {
+          "key": "value",
+          "caption": "Valor inicial",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "placeholder",
+          "caption": "Placeholder",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "type",
+          "caption": "Tipo",
+          "type": "dropdown",
+          "choices": [
+            "text",
+            "search",
+            "email",
+            "number",
+            "tel",
+            "url",
+            "password"
+          ],
+          "default": "text"
+        },
+        {
+          "key": "disabled",
+          "caption": "Desabilitado",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "invalid",
+          "caption": "Inválido",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "error_message",
+          "caption": "Mensagem de erro",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "accessible_label",
+          "caption": "Rótulo acessível",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "debounce_ms",
+          "caption": "Atraso do evento (ms)",
+          "type": "number",
+          "default": 300
+        },
+        {
+          "key": "icon",
+          "caption": "Ícone",
+          "type": "dropdown",
+          "choices": [
+            "none",
+            "search",
+            "filter",
+            "pencil",
+            "eye"
+          ],
+          "default": "none"
+        }
       ],
       "reset": true,
-      "states": [{ "key": "value", "caption": "Valor", "type": "text" }],
+      "states": [
+        {
+          "key": "value",
+          "caption": "Valor",
+          "type": "text"
+        }
+      ],
       "events": [
-        { "key": "value_changed", "caption": "Valor do MC Input muda" },
-        { "key": "submitted", "caption": "Enter pressionado no MC Input" }
+        {
+          "key": "value_changed",
+          "caption": "Valor do MC Input muda"
+        },
+        {
+          "key": "submitted",
+          "caption": "Enter pressionado no MC Input"
+        }
       ]
     },
     {
       "name": "MC Pagination",
       "component": "Pagination",
-      "defaultSize": { "width": 480, "height": 40 },
+      "defaultSize": {
+        "width": 480,
+        "height": 40
+      },
       "fields": [
-        { "key": "page", "caption": "Página atual", "type": "number", "default": 1 },
-        { "key": "total_pages", "caption": "Total de páginas", "type": "number", "default": 1 },
-        { "key": "disabled", "caption": "Desabilitado", "type": "yes / no", "default": false },
-        { "key": "show_numbers", "caption": "Mostrar números", "type": "yes / no", "default": false },
-        { "key": "summary", "caption": "Resumo (ex.: Mostrando 1–12 de 40)", "type": "text", "optional": true }
+        {
+          "key": "page",
+          "caption": "Página atual",
+          "type": "number",
+          "default": 1
+        },
+        {
+          "key": "total_pages",
+          "caption": "Total de páginas",
+          "type": "number",
+          "default": 1
+        },
+        {
+          "key": "disabled",
+          "caption": "Desabilitado",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "show_numbers",
+          "caption": "Mostrar números",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "summary",
+          "caption": "Resumo (ex.: Mostrando 1–12 de 40)",
+          "type": "text",
+          "optional": true
+        }
       ],
-      "states": [{ "key": "requested_page", "caption": "Página solicitada", "type": "number" }],
-      "events": [{ "key": "page_changed", "caption": "Página solicitada no MC Pagination" }]
+      "states": [
+        {
+          "key": "requested_page",
+          "caption": "Página solicitada",
+          "type": "number"
+        }
+      ],
+      "events": [
+        {
+          "key": "page_changed",
+          "caption": "Página solicitada no MC Pagination"
+        }
+      ]
     },
     {
       "name": "MC Sidebar",
       "component": "Sidebar",
-      "defaultSize": { "width": 240, "height": 40 },
+      "defaultSize": {
+        "width": 240,
+        "height": 40
+      },
       "fields": [
-        { "key": "labels", "caption": "Rótulos (lista)", "type": "text", "list": true },
-        { "key": "icons", "caption": "Ícones (lista)", "type": "text", "list": true },
-        { "key": "hrefs", "caption": "Destinos (lista: página ou URL)", "type": "text", "list": true },
-        { "key": "active", "caption": "Página ativa", "type": "text", "optional": true },
-        { "key": "logo_url", "caption": "Logo (URL)", "type": "text", "optional": true },
-        { "key": "logo_mark_url", "caption": "Logo recolhido (URL)", "type": "text", "optional": true },
-        { "key": "home_href", "caption": "Página inicial (logo)", "type": "text", "default": "dashboard" },
-        { "key": "storage_key", "caption": "Chave da preferência (recolhido)", "type": "text", "default": "mc-sidebar-collapsed" },
-        { "key": "mobile_trigger", "caption": "Mostrar botão de menu no celular", "type": "yes / no", "default": true }
+        {
+          "key": "labels",
+          "caption": "Rótulos (lista)",
+          "type": "text",
+          "list": true
+        },
+        {
+          "key": "icons",
+          "caption": "Ícones (lista)",
+          "type": "text",
+          "list": true
+        },
+        {
+          "key": "hrefs",
+          "caption": "Destinos (lista: página ou URL)",
+          "type": "text",
+          "list": true
+        },
+        {
+          "key": "active",
+          "caption": "Página ativa",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "logo_url",
+          "caption": "Logo (URL)",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "logo_mark_url",
+          "caption": "Logo recolhido (URL)",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "home_href",
+          "caption": "Página inicial (logo)",
+          "type": "text",
+          "default": "dashboard"
+        },
+        {
+          "key": "storage_key",
+          "caption": "Chave da preferência (recolhido)",
+          "type": "text",
+          "default": "mc-sidebar-collapsed"
+        },
+        {
+          "key": "mobile_trigger",
+          "caption": "Mostrar botão de menu no celular",
+          "type": "yes / no",
+          "default": true
+        }
       ],
-      "states": [{ "key": "collapsed", "caption": "Recolhido", "type": "yes / no" }],
+      "states": [
+        {
+          "key": "collapsed",
+          "caption": "Recolhido",
+          "type": "yes / no"
+        }
+      ],
       "events": []
     },
     {
       "name": "MC User Menu",
       "component": "UserMenu",
-      "defaultSize": { "width": 48, "height": 48 },
+      "defaultSize": {
+        "width": 48,
+        "height": 48
+      },
       "fields": [
-        { "key": "name", "caption": "Nome", "type": "text", "optional": true },
-        { "key": "subtitle", "caption": "Subtítulo (ex.: perfil)", "type": "text", "optional": true },
-        { "key": "avatar_url", "caption": "Foto (URL)", "type": "text", "optional": true },
-        { "key": "show_name", "caption": "Mostrar nome ao lado do avatar", "type": "yes / no", "default": false },
-        { "key": "labels", "caption": "Itens (lista)", "type": "text", "list": true },
-        { "key": "icons", "caption": "Ícones dos itens (lista)", "type": "text", "list": true },
-        { "key": "danger_label", "caption": "Item de saída (vermelho, por último)", "type": "text", "optional": true }
+        {
+          "key": "name",
+          "caption": "Nome",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "subtitle",
+          "caption": "Subtítulo (ex.: perfil)",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "avatar_url",
+          "caption": "Foto (URL)",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "show_name",
+          "caption": "Mostrar nome ao lado do avatar",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "labels",
+          "caption": "Itens (lista)",
+          "type": "text",
+          "list": true
+        },
+        {
+          "key": "icons",
+          "caption": "Ícones dos itens (lista)",
+          "type": "text",
+          "list": true
+        },
+        {
+          "key": "danger_label",
+          "caption": "Item de saída (vermelho, por último)",
+          "type": "text",
+          "optional": true
+        }
       ],
-      "states": [{ "key": "selected_item", "caption": "Item escolhido", "type": "text" }],
-      "events": [{ "key": "item_selected", "caption": "Item escolhido no MC User Menu" }]
+      "states": [
+        {
+          "key": "selected_item",
+          "caption": "Item escolhido",
+          "type": "text"
+        }
+      ],
+      "events": [
+        {
+          "key": "item_selected",
+          "caption": "Item escolhido no MC User Menu"
+        }
+      ]
+    },
+    {
+      "name": "MC Textarea",
+      "component": "Textarea",
+      "defaultSize": {
+        "width": 320,
+        "height": 96
+      },
+      "fields": [
+        {
+          "key": "value",
+          "caption": "Valor inicial",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "placeholder",
+          "caption": "Placeholder",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "rows",
+          "caption": "Linhas visíveis",
+          "type": "number",
+          "default": 3
+        },
+        {
+          "key": "max_length",
+          "caption": "Limite de caracteres (0 = sem limite)",
+          "type": "number",
+          "default": 0
+        },
+        {
+          "key": "disabled",
+          "caption": "Desabilitado",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "invalid",
+          "caption": "Inválido",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "error_message",
+          "caption": "Mensagem de erro",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "accessible_label",
+          "caption": "Rótulo acessível",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "debounce_ms",
+          "caption": "Atraso do evento (ms)",
+          "type": "number",
+          "default": 300
+        }
+      ],
+      "states": [
+        {
+          "key": "value",
+          "caption": "Valor",
+          "type": "text"
+        }
+      ],
+      "events": [
+        {
+          "key": "value_changed",
+          "caption": "Valor do MC Textarea mudou"
+        }
+      ],
+      "reset": true
+    },
+    {
+      "name": "MC Switch",
+      "component": "Switch",
+      "defaultSize": {
+        "width": 160,
+        "height": 24
+      },
+      "fields": [
+        {
+          "key": "checked",
+          "caption": "Ligado (valor inicial)",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "label",
+          "caption": "Rótulo",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "disabled",
+          "caption": "Desabilitado",
+          "type": "yes / no",
+          "default": false
+        }
+      ],
+      "states": [
+        {
+          "key": "checked",
+          "caption": "Ligado",
+          "type": "yes / no"
+        }
+      ],
+      "events": [
+        {
+          "key": "changed",
+          "caption": "MC Switch mudou"
+        }
+      ],
+      "reset": true
+    },
+    {
+      "name": "MC Checkbox",
+      "component": "Checkbox",
+      "defaultSize": {
+        "width": 160,
+        "height": 24
+      },
+      "fields": [
+        {
+          "key": "checked",
+          "caption": "Marcado (valor inicial)",
+          "type": "yes / no",
+          "default": false
+        },
+        {
+          "key": "label",
+          "caption": "Rótulo",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "key": "disabled",
+          "caption": "Desabilitado",
+          "type": "yes / no",
+          "default": false
+        }
+      ],
+      "states": [
+        {
+          "key": "checked",
+          "caption": "Marcado",
+          "type": "yes / no"
+        }
+      ],
+      "events": [
+        {
+          "key": "changed",
+          "caption": "MC Checkbox mudou"
+        }
+      ],
+      "reset": true
+    },
+    {
+      "name": "MC Breadcrumb",
+      "component": "Breadcrumb",
+      "defaultSize": {
+        "width": 320,
+        "height": 24
+      },
+      "fields": [
+        {
+          "key": "labels",
+          "caption": "Rótulos (lista; o último é a página atual)",
+          "type": "text",
+          "list": true
+        },
+        {
+          "key": "hrefs",
+          "caption": "Destinos (lista; vazio = sem link)",
+          "type": "text",
+          "list": true,
+          "optional": true
+        }
+      ],
+      "states": [],
+      "events": []
     }
   ]
 }
