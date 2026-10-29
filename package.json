@@ -1,6 +1,6 @@
 {
   "name": "@modo-corre/ui",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Componentes shadcn/ui e identidade visual Modo Corre",
   "license": "MIT",
   "type": "module",
@@ -30,7 +30,7 @@
     "./tokens.css": "./tokens.css"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --noEmit false",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build",
     "build:bubble": "npm --prefix bubble install && npm --prefix bubble run build",

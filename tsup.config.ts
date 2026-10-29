@@ -1,9 +1,10 @@
 import { defineConfig } from "tsup";
 
+// Sem bundle: cada arquivo mantém a própria diretiva "use client" (o Sidebar usa createContext).
 export default defineConfig({
-  entry: ["src/index.ts"],
+  entry: ["src/**/*.{ts,tsx}"],
+  bundle: false,
   format: ["esm"],
-  dts: true,
+  dts: false,
   clean: true,
-  external: ["react", "react-dom", "@base-ui/react", "lucide-react", "sonner"],
 });
