@@ -449,6 +449,80 @@ Checkbox: a página não tinha nenhum; o elemento fica disponível no plugin.
 
 Testado no Chrome: breadcrumb com link para `catalogo`; Switch desliga/religa "categoria teste" (badge e contadores Ativas/Inativas acompanham; voltou ao estado original); Editar abre o Textarea preenchido e Salvar sem mudanças mantém o nome; Nova categoria abre o Textarea vazio. Uma primeira tentativa do Switch numa aba aberta antes da publicação (o Bubble avisava "esta página foi atualizada") travou a aba; numa aba recém-carregada não se repetiu.
 
+### Migração aplicada na `catalogo-tag` (plugin 0.5.0)
+
+Savepoint antes: `1793281400266`. Mesmo padrão da categoria; originais ocultados, não excluídos.
+
+| Antes | Depois |
+| --- | --- |
+| Menu Lateral A (`bZRoX0`) | instância do reusável **MC Menu** `bZWiJ` (Fit width, altura mínima 0) |
+| Guia Catálogo › Página | MC Breadcrumb `bZWgd` (`Catálogo|Tag` → `catalogo`) |
+| Nova tag, Cards/Lista, Todas/Ativas/Inativas, Limpar filtros, Editar/Desativar do card, Editar da lista, Nova tag e Limpar do vazio | MC Button `bZWgf`, `bZWgj`/`bZWgl`, `bZWgn`/`bZWgp`/`bZWgr`, `bZWhD`, `bZWgv`/`bZWgx` (rótulo "Ativar" quando inativa), `bZWgz`, `bZWhB` |
+| Busca | MC Input `bZWgh`; o RG `bZVdt` e o condicional "Nome (A–Z)" leem `MCInput A's Valor:trimmed` |
+| Badge Ativa/Inativa | MC Badge `bZWgt` |
+| Anterior/Próxima | MC Pagination `bZWhF` (`Set state pagina` = `Página solicitada`) |
+| Popup: descrição, Salvar, Cancelar | MC Input `bZWhH` (limite 60), MC Button `bZWhJ`, `bZWhL` ("Fechar" em visualizar) |
+
+Os workflows existentes foram reapontados e convertidos para os eventos MC (`bZVgh`, `bZVgT`, `bZVgW`, `bZVfo`, `bZVfy`, `bZVgI`, `bZVgx`, `bZVhJ`, `bZVhD`, `bZVgm`, `bZVgr`, `ct_pp_wf_save`, `ct_pp_wf_cancel`, `bZVgZ`, `bZVgN`); criar/alterar leem `MCInput B's Valor`.
+
+Testado no Chrome (desktop e iframe de 390 px): busca "att" + filtro Ativas (3 resultados), ordenação Nome (A–Z) respeitando a busca, Editar abre o popup preenchido (cancelado sem salvar), Lista, header mobile e menu hambúrguer com rolagem.
+
+### Migração aplicada na `catalogo-peca` (plugin 0.5.0)
+
+Savepoint antes: `1793293792326`. Originais ocultados, não excluídos.
+
+| Antes | Depois |
+| --- | --- |
+| Menu Lateral A (`bZTbf0`) | MC Menu `bZWjN` (Fit width, altura mínima 0) |
+| Group D (Catálogo › Catálogo de peças) | MC Breadcrumb `bZWiX` |
+| Importar / Exportar / Nova peça | MC Button `bZWiV` / `bZWiZ` / `bZWib`. Os IDs `cp-btn-importar` e `cp-btn-exportar` passaram para os MC Buttons (os scripts da página usam `closest('#cp-btn-…')` no `document`, que funciona com o Shadow DOM); os botões antigos ficaram com `-old` |
+| Busca (Group N + Input A `bZTlx`) | MC Input `bZWid` dentro do Group N (fundo e borda do grupo removidos, ID `cp-busca-mc`), para o `Reset Group N` do "Limpar filtros" continuar zerando a busca |
+| Filtros (só < 900 px), Cards/Lista, Todas/Ativas/Inativas, Limpar filtros | MC Button `bZWif`, `bZWih`/`bZWij`, `bZWil`/`bZWin`/`bZWip`, `bZWir` |
+| Card: badge, Editar, Desativar | MC Badge `bZWit`, MC Button `bZWiv`, `bZWix` ("Ativar" quando inativa) |
+| Lista: Editar | MC Button `bZWiz` |
+| Vazio: Nova peça, Limpar filtros | MC Button `bZWjB`, `bZWjD` |
+| Anterior / Página X de Y / Próxima | MC Pagination `bZWjF`; o workflow `bZTtw` virou "página solicitada" e o `Set state pagina` (`bZTty`) usa `Página solicitada` sem condição |
+| Painel: X, Cancelar, Salvar peça | MC Button `bZWjH`, `bZWjJ`, `bZWjL` (desabilitado sem nome/tag/tipo; "Salvando…" com carregando) |
+
+A fonte de dados do RG `bZToG`, os condicionais de ordenação e o HTML E (dados do PDF/Excel) leem `MCInput A's Valor`. Os 5 condicionais antigos de ordenação do RG ficaram sem efeito (os 3 novos têm as mesmas condições e vêm depois) e podem ser apagados no editor.
+
+**Nome da peça** (savepoint antes: `1793294715770`): o `Input B` (`bZTqs`) foi trocado pelo MC Input `bZWkQ` com **Limite de caracteres = 60**, valor inicial = descrição da peça do painel e a mensagem "Use no máximo 60 caracteres." acima disso. Foram reescritas para ler `MCInput B's Valor`:
+- a pré-visualização do SKU (`Text UZ` `bZTqk`) e o aviso abaixo dela (`bZTqm`);
+- o Salvar (`bZWjL`), que também fica desabilitado acima de 60;
+- as ações `Create a new` (`bZTuT`), `Make changes` (`bZTuU`) e a troca de SKU (`bZTum`).
+
+Nesta troca foi corrigido um erro que já existia: a pré-visualização comparava a inicial do SKU em maiúscula ("T") com a inicial do nome em minúscula ("t"). Por isso uma peça existente sempre mostrava "Novo SKU · a primeira letra do nome mudou". Agora a comparação usa `:lowercase` dos dois lados, como a ação de salvar já fazia. O input antigo e o Salvar antigo (`bZTrc`) ficaram ocultos. Os dropdowns e o checkbox (já oculto) continuam nativos.
+
+Testado no Chrome (desktop e iframe de 390 px): busca "mot" + Ativas (2 resultados), Limpar filtros zera a busca, menu Exportar abre ancorado no botão MC, Editar abre o painel (fechado pelo X sem salvar), Lista, paginação 1 → 2 (13–18 de 18), botão Filtros no celular e menu hambúrguer. Nome da peça, sem salvar: T-003 "teste" mostra "SKU atual"; trocar para "Motor" mostra M-006 e "Novo SKU"; 70 caracteres digitados param em 60; Nova peça abre com o campo vazio, SKU "—" e Salvar desabilitado.
+
+### Ajustes visuais nas três páginas de catálogo
+
+- **Paginação no celular:** o MC Pagination (`bZVjK`, `bZWhF`, `bZWjF`) deixou de ter largura fixa e passou a largura flexível de 340 a 340 px, o que mantém o desktop igual. Abaixo de 768 px, um condicional muda o mínimo e o máximo para 100%, e os controles ficam centralizados. O texto "Mostrando…" (`bZVZR`, `bZVfX`, `bZTpq`) ganha largura mínima de 100% e alinhamento central no mesmo ponto de corte. Não é possível alternar "largura fixa" por condicional; só a largura mínima e a máxima.
+- **Badge da peça (`bZWit`):** o pill fica à esquerda dentro da caixa do elemento. Por isso a caixa agora tem a largura do pill: 56 px para "Ativa" e 65 px para "Inativa", por condicional de status. Assim ele encosta na borda do card como o SKU.
+- **Breadcrumb da peça (`bZWiX`):** usa a mesma altura (44 px) e margem inferior (20 px) da tag e da categoria.
+- **Busca da peça:** o Group N (`bZTlt`) estava com padding de 14/6 px, que empurrava o MC Input para a direita. O padding foi zerado.
+- **Nova tag / Nova categoria** (`bZWgf`, `bZVjI` e os botões da tela vazia) ganharam o ícone `plus`, como Nova peça.
+
+## Piloto do estoque: `estoque-locais` no padrão do catálogo
+
+Savepoint antes: `1793296140482`. As páginas de estoque usavam o modelo antigo de tabela (página com largura fixa, card com título e busca, cabeçalho azul, paginação nativa com `ListofNumbers`). O piloto leva a página para o padrão do catálogo sem mudar regras nem permissões. Os originais foram ocultados, não excluídos.
+
+| Parte | Como ficou |
+| --- | --- |
+| Página | `fixed_width` desligado, fundo `--color_bZKIB` (o mesmo do catálogo); novo estado `pagina` (número, padrão 1) |
+| Sidebar | MC Menu `bZWkv` (Fit width, altura mínima 0); Menu Lateral A (`bZUIi`) oculto |
+| Contêiner (`bZUIk`) | largura flexível até 1920 px, padding 8/32/40/32 e 16/16/12 abaixo de 760 px, ID `cp-pagina` (igual ao catálogo) |
+| Breadcrumb | MC Breadcrumb `bZWkx` (`Estoque|Locais de estoque` → `estoque`); `Group guia` oculto |
+| Cabeçalho | grupo `bZWkz` com título de 24 px e peso 600 (`bZWlD`), subtítulo de 14 px (`bZWlF`) e MC Button "Novo local" (`bZWlH`, ícone plus). O botão fica oculto para quem não tem ESTOQUE-GESTOR, ADMIN ou DEV, como o antigo. O card antigo (`bZUJP`) foi ocultado |
+| Busca | MC Input `bZWlJ` (largura total). Ao mudar, o workflow `bZWlZ` volta `pagina` para 1 |
+| Tabela | mesmo visual da lista do catálogo: card branco com borda `--color_bZKIE` e raio 16; cabeçalho `--color_bZKID` com texto de 12 px em `--color_bZKII`; linhas de 14 px em `--color_bZKIH`. Abaixo de 768 px o cabeçalho some e as linhas viram cartões |
+| Paginação | o RG `bZUIw` mostra `Search:items from (pagina-1)*10+1:items until 10`. MC Pagination `bZWlP` + texto "Mostrando…" (`bZWlN`), no mesmo esquema responsivo do catálogo. O workflow `bZWlc` grava a página solicitada. A paginação antiga (`bZUJJ`) foi ocultada |
+| Popup | nome e código viraram MC Input `bZWlR` (limite de 60) e `bZWlT` (limite de 30). Salvar e Cancelar viraram MC Button `bZWlV` e `bZWlX`. Salvar fica desabilitado com o nome vazio e oculto em "visualizar"; Cancelar vira "Fechar" em "visualizar". As ações `bZUJu` e `bZUJv` leem os MC Inputs. A condição de permissão dos eventos `bZUJt` e `bZUKB` foi mantida |
+
+Mantidos como estavam: o toggle de status, o menu de ações (⋮ com Visualizar/Editar via JS) e os dropdowns de unidade e tipo.
+
+Testado no Chrome sem salvar, no desktop e num iframe de 390 px: busca "B" (1 resultado, "Mostrando 1–1 de 1"), "Novo local" (Salvar desabilitado), Editar pelo ⋮ (popup preenchido, cancelado).
+
 ## Menu lateral: option set `MenuItem` + reusável `MC Menu`
 
 **Por que assim:** os menus antigos (`Menu Lateral` `bTHFF` e `Menu Lateral Dinamico` `bVklv0`) repetiam grupos por perfil com condicionais de visibilidade. Agora a lista de itens é dado (option set) e a regra de quem vê o quê continua **numa expressão do Bubble**: o componente só recebe o que já pode ser mostrado.
