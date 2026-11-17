@@ -521,7 +521,178 @@ Savepoint antes: `1793296140482`. As páginas de estoque usavam o modelo antigo 
 
 Mantidos como estavam: o toggle de status, o menu de ações (⋮ com Visualizar/Editar via JS) e os dropdowns de unidade e tipo.
 
+**Segunda rodada (indicadores, cards e lista):**
+- **Rolagem extra:** vinha do "Empty Card" (`bZUIp`) com altura mínima de 600 px. Agora a altura mínima é 0, e o `Group container` usa 100%, como no catálogo.
+- **Estados novos da página:** `status_filtrado` (sim/não), `f_status` (sim/não; vazio = todos) e `visao` (texto, padrão `cards`).
+- **Fonte única:** o RG `bZWlf` tem tamanho 0, como o `cp-fonte` do catálogo. Ele busca os locais filtrados por `f_status` e pelo nome digitado. A grade, a tabela, a contagem e a paginação leem essa lista com `:items from (pagina-1)*12+1 :items until 12`.
+- **Indicadores** (`bZWlh`): Locais cadastrados, Ativos, Inativos e Novos em 30 dias, com o mesmo visual dos indicadores do catálogo (ID `cp-kpi`, que vira `cp-kpi-on` quando está ativo). Os três primeiros filtram ao clicar (workflows `bZWor`, `bZWox`, `bZWpC`).
+- **Busca e alternância:** linha `bZWmP` com a busca (`bZWlJ`) e os botões Cards/Lista (`bZWmT`/`bZWmV`, workflows `bZWpW`/`bZWpZ`). A alternância fica oculta abaixo de 768 px; no celular a página mostra sempre os cards.
+- **Chips de status:** Todos, Ativos e Inativos (`bZWmZ`/`bZWmb`/`bZWmd`) e a contagem "N locais no resultado" (`bZWmf`).
+- **Grade de cards** `bZWmh` (ID `cp-grid`): colunas automáticas de pelo menos 260 px. Cada card (`bZWmj`, ID `cp-card`, padding de 18 px) mostra:
+  - o badge Ativo/Inativo;
+  - o nome;
+  - um quadro com Código, Unidade e Tipo;
+  - os botões Editar (workflow `bZWpc`, abre o popup preenchido) e Desativar/Ativar (workflow `bZWpi`, com a mesma condição de permissão do toggle; o botão fica oculto para quem não tem acesso).
+- **Tabela:** aparece só na vista Lista e em telas de 768 px ou mais.
+- **CSS:** o HTML `bZWnP` copia o CSS de animação e hover do catálogo (`cp-css`).
+
+## Página `catalogo` no padrão do catálogo
+
+Savepoint antes: `1793361774734`.
+- **Página e menu:** largura flexível com fundo `--color_bZKIB`. O menu lateral dinâmico flutuante (`bZUCW0`) e o espaçador `falsoLateral` foram ocultados e substituídos pelo MC Menu `bZWsU`.
+- **Header:** o reusável Menu Superior entrou no fluxo do `Group container` (`bZWsW`), como nas outras páginas. O `FloatingGroup B` e o espaçador `falsoTop` foram ocultados.
+- **Contêiner** (`bZUBO0`): padding de 8/32/40/32 px (16/16/12 abaixo de 760 px), ID `cp-pagina`, largura máxima de 1920 px.
+- **Título e subtítulo:** "Catálogo" com 24 px e peso 600, mais um subtítulo de 14 px (`bZWsY`).
+- **Atalhos:** os três atalhos (Tags, Categorias, Peças) viraram cards do catálogo (fundo branco, borda `--color_bZKIE`, raio 16, padding de 18 px, ID `cp-card`, mínimo de 260 px). O ícone fica num quadrado de 44 px em `--color_bZKHz`, e as descrições foram reescritas. Os workflows de navegação não mudaram. O CSS de hover vem do HTML `bZWsa`.
+
+Ajustes feitos no editor:
+- MC Menu `bZWsU` com Fit width e altura mínima 0.
+- Header `bZWsW` com altura mínima de 80 px e sem altura máxima (os 60 px padrão cortavam o header).
+- O subtítulo foi movido para antes dos cards.
+- O card oculto "Status de movimentação" (`bZUBV0`) passou a recolher quando oculto; antes ele reservava espaço e os três cards não ocupavam a largura.
+
+Testado no Chrome, no desktop e num iframe de 390 px:
+- os três cards ocupam a largura;
+- o card Tags leva para `catalogo-tag`;
+- no celular os cards ficam empilhados e o menu hambúrguer aparece.
+
+Ainda sobram cerca de 26 px de rolagem no desktop, com a página quase vazia.
+
+## Popups com altura máxima e rolagem interna
+
+Savepoint antes: `1793366341250`.
+
+**Problema:** os popups cresciam até o tamanho do conteúdo. Nos formulários longos, ocupavam a tela inteira e a página rolava por trás.
+
+**Solução:** os popups de catálogo e estoque têm altura máxima de `min(640px, calc(100vh - 100px))`. O "Fit height to content" continua ligado.
+- O Bubble já aplica `overflow-y: auto` no popup, então o conteúdo que passa da altura rola por dentro.
+- Popups pequenos continuam do tamanho do conteúdo, sem espaço vazio.
+- O popup do Bubble não tem uma opção própria de rolagem; o comportamento vem só da altura máxima.
+
+Popups alterados (20):
+
+| Página | Popups |
+| --- | --- |
+| `catalogo-tag` | `ct_pp_pop` |
+| `catalogo-categoria` | `bZTSY0` |
+| `estoque-locais` | `bZUJW` |
+| `estoque-configuracoes` | `bZUMy` |
+| `estoque-movimentacoes` | `bZUWV`, `bZUYL` |
+| `estoque-recebimentos` | `bZUeS` |
+| `estoque-recebimento` | `bZUgG`, `bZUgd` |
+| `estoque-transferencias` | `bZUpx` |
+| `estoque-transferencia` | `bZUtU`, `bZUta` |
+| `estoque-inventarios` | `bZVly` |
+| `estoque-inventario` | `bZVon`, `bZVot` |
+| `estoque-compras` | `bZVsN` |
+| `estoque-compra` | `bZVvC`, `bZVvI` |
+| `estoque-os-materiais` | `bZUjX`, `bZUjr` |
+
+`catalogo-peca` usa um painel lateral (FloatingGroup), não popup, e ficou como estava.
+
+Para popups novos, use a mesma altura máxima.
+
+Testado no Chrome, com janela de 674 px de altura:
+- "Nova configuração" ficou com 574 px de altura e conteúdo de 728 px rolando por dentro;
+- "Nova movimentação" ficou com 574 px e conteúdo de 741 px rolando por dentro;
+- "Novo local" manteve 506 px, sem rolagem.
+
+## Página `estoque` (hub) no padrão do catálogo
+
+Savepoint antes: `1793365640770`. Segue o mesmo modelo do hub `catalogo`:
+- **Página e contêiner:**
+  - largura flexível e fundo `--color_bZKIB`;
+  - `Group Container b` (`bZUxj`) com ID `cp-pagina`, padding 8/32/40/32 (16/16/12 abaixo de 760 px) e largura máxima de 1920 px.
+- **Header:**
+  - o reusável Menu Superior (`bZXBy`) entrou no fluxo do `Group container`;
+  - `FloatingGroup B` e o espaçador `falsoTop` foram ocultados;
+  - no editor, a altura mínima ficou em 80 px e a altura máxima foi removida. O reusável não aceita propriedades de layout pela API.
+  - O MC Menu (`bZWQF`) já estava na página com Fit width.
+- **Título e subtítulo:**
+  - título "Estoque" de 24 px, peso 600, alinhado à esquerda;
+  - subtítulo novo (`bZXCA`): "Escolha uma área para controlar saldos, movimentações e compras do estoque."
+- **Cards:** os dez atalhos (Locais, Configurações, Saldos, Movimentações, Recebimentos, Materiais da OS, Transferências, Inventário, Pedidos de compra, Alertas e relatórios) estão no visual do catálogo:
+  - fundo branco, borda `--color_bZKIE`, raio 16, padding de 18 px, sombra leve, ID `cp-card`, mínimo de 260 px;
+  - altura esticada para igualar os cards da mesma linha;
+  - ícone num quadrado de 44 px em `--color_bZKHz`;
+  - título de 16 px e descrição de 13 px.
+  - Textos e workflows de navegação não mudaram.
+- **Hover:** o CSS vem do HTML `bZXCC` (cópia de `bZVZb`).
+
+Testado no Chrome:
+- desktop: cinco cards por linha com a mesma altura;
+- o card Saldos abre `estoque-saldos`;
+- iframe de 390 px: cards empilhados em largura total e menu hambúrguer.
+
+### `estoque-locais`: ajustes após o teste
+
+- A grade usa colunas de pelo menos 260 px sem "esticar" (`auto_fit_column` desligado), como no catálogo (5 colunas de ~264 px).
+- No card, Código, Unidade e Tipo têm largura mínima de 90 px; Tipo desce para a segunda linha.
+- Estado vazio (`bZUIr`) no padrão do catálogo:
+  - card branco com ícone de local (HTML `bZWso`);
+  - "Nenhum local encontrado";
+  - botão "Novo local" (`bZWss`, workflow `bZWsw`, com a mesma condição de permissão);
+  - "Limpar filtros" (`bZWsu`, workflow `bZWtB`: reseta a busca, volta para Todos e para a página 1; só aparece com filtro ou busca ativos).
+  - A imagem antiga foi ocultada.
+
+Testado no Chrome sem salvar:
+- 5 colunas na grade;
+- filtro Inativos mostra o estado vazio;
+- o indicador Ativos filtra e fica destacado;
+- vista Lista mostra a tabela;
+- a busca "zzz" mostra o estado vazio, e "Limpar filtros" volta tudo;
+- Editar no card abre o popup preenchido (cancelado);
+- celular de 390 px com cards em largura total e sem a alternância.
+
 Testado no Chrome sem salvar, no desktop e num iframe de 390 px: busca "B" (1 resultado, "Mostrando 1–1 de 1"), "Novo local" (Salvar desabilitado), Editar pelo ⋮ (popup preenchido, cancelado).
+
+## Estoque: `estoque-configuracoes`, `estoque-saldos` e `estoque-movimentacoes` no padrão do catálogo
+
+Savepoint antes: `1793363679224`. As três páginas repetem o piloto de `estoque-locais`. Os lotes foram gerados por um script a partir do JSON de cada página, para copiar as buscas e condicionais existentes sem reescrever regras à mão.
+
+O que mudou em cada página:
+- **Estados novos da página:** `pagina` (número, padrão 1) e `visao` ("cards" ou "lista"). Configurações também ganhou `status_filtrado` e `f_status`.
+- **Estrutura antiga oculta:** menu antigo, guia, cabeçalho antigo e paginação antiga. O MC Menu entrou com Fit width e altura mínima 0, ajustados no editor.
+- **Contêiner e cabeçalho:**
+  - contêiner com ID `cp-pagina`, padding 8/32/40/32 (16/16/12 abaixo de 760 px) e largura máxima de 1920 px;
+  - MC Breadcrumb;
+  - título de 24 px com subtítulo;
+  - botões do cabeçalho em MC Button.
+- **Indicadores:** quatro cards de indicador com `Search…:count`.
+- **Busca e alternância:** linha com MC Input "Buscar pela peça" e a alternância Cards/Lista. A alternância some abaixo de 768 px; no celular a página sempre mostra cards.
+- **Lista paginada:**
+  - um RG oculto ("fonte") tem a mesma busca da tabela antiga. A única diferença é que lê o MC Input (`get_AAY`) no lugar do input antigo;
+  - a grade de cards e a tabela mostram a página atual: `fonte:items from (pagina-1)*12+1 :items until 12`;
+  - a tabela original continua, restilizada, e só aparece na vista Lista;
+  - o rodapé tem o resumo "Mostrando a–b de N" e a MC Pagination.
+- **Estado vazio:** card branco com ícone, aparecendo quando a fonte está vazia.
+- **Popups:** os botões viraram MC Button. Os workflows originais foram religados ao botão novo (primeiro troca o elemento, depois o tipo do evento para "MC Button clicked"). As condições de permissão dos eventos foram preservadas.
+
+| Página | Indicadores | Card | Específico |
+| --- | --- | --- | --- |
+| `estoque-configuracoes` | Configurações (filtro Todas), Disponíveis, Indisponíveis (os três clicáveis), Aceitam negativo | Badge Disponível/Indisponível, peça, unidade, mínimo/bloqueio, origem; botões Editar (abre o popup) e Bloquear/Liberar | Chips Todas/Disponíveis/Indisponíveis; restrição `disponivel = f_status` na fonte (ignorada quando vazia). O grupo "Pedidos de compra acima de R$" foi mantido. Bloquear/Liberar usa a mesma condição de acesso (ESTOQUE-GESTOR, ADMIN, DEV) do toggle da tabela. |
+| `estoque-saldos` | Itens com saldo, Abaixo do mínimo, Saldo negativo, Em trânsito | Badge "Em dia" / "Abaixo do mínimo", peça, local · unidade, físico, reservado, disponível (vermelho se negativo, âmbar se abaixo do mínimo), em trânsito; botão Histórico (vai para movimentações com `peca`, `local`, `de=saldos`) | Os quatro atalhos do cabeçalho viraram MC Button outline. Os filtros (categoria, unidade, local, "Só abaixo do mínimo") foram mantidos abaixo da busca. "Limpar" também reseta a linha de busca. As duas condicionais antigas da tabela (que trocavam a busca) foram removidas, porque agora estão na fonte. |
+| `estoque-movimentacoes` | Movimentações, Entradas (delta > 0), Saídas (delta < 0), Últimos 30 dias | Badge do tipo, peça, local · unidade, data, quantidade (verde/vermelho), saldo após, responsável; botão Estornar (mesmas regras de visibilidade do link antigo) | Breadcrumb dinâmico pelo parâmetro `de` (Saldos ou Alertas e relatórios). Filtros de unidade e local e o aviso de inventário foram mantidos. "Registrar movimentação" e "Confirmar estorno" mostram carregando enquanto `salvando` é sim. |
+
+Observações:
+- Em configurações, os indicadores contavam 3 e a lista mostrava 2. A diferença era uma configuração órfã, sem peça: criada em 26/10, mínimo 123, aceita negativo. A lista já a ignorava, porque filtra pela peça. Os quatro indicadores passaram a contar só configurações com peça (`peca is not empty`). O registro órfão continua na base, sem alteração.
+- O card de movimentação foi simplificado:
+  - a linha abaixo do título mostra local · unidade · data (`dd/mm/yy`, sem horário), no texto `bZXAa`;
+  - o bloco de informações mostra só Quantidade e Saldo após, lado a lado;
+  - Data (`bZXAe`) e Responsável (`bZXAw`) foram ocultados;
+  - o badge do tipo (`bZXAW`) se ajusta ao texto e não corta mais nomes longos como "Recebimento de transferência";
+  - o horário e o responsável continuam na vista Lista.
+- No card de configuração, o bloco "Mínimo / bloqueio" (`bZWur`) fica oculto. Os valores continuam na vista Lista e no popup de edição.
+- Saldos e movimentações não têm registros na versão de teste. Por isso só foram conferidos o layout, os indicadores zerados, o estado vazio e o popup "Nova movimentação"; os cards dessas duas páginas não foram vistos com dados.
+
+Testado no Chrome sem salvar nada:
+- configurações:
+  - desktop: cards, vista Lista com a tabela, chip Indisponíveis (KPI destacado e estado vazio), Editar abre o popup preenchido (cancelado);
+  - iframe de 390 px: cards em largura total e paginação centralizada;
+- saldos: desktop com cabeçalho, filtros e estado vazio;
+- movimentações:
+  - desktop: popup "Nova movimentação" com os botões MC (cancelado);
+  - iframe de 390 px.
 
 ## Menu lateral: option set `MenuItem` + reusável `MC Menu`
 
