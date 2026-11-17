@@ -208,6 +208,133 @@
       "files": [
         { "path": "src/components/ui/separator.tsx", "type": "registry:ui" }
       ]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "Alert Dialog",
+      "description": "Diálogo de confirmação (Base UI AlertDialog) com portal configurável",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["button"],
+      "files": [
+        { "path": "src/components/ui/alert-dialog.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "description": "Painel que abre e fecha (Base UI Collapsible)",
+      "dependencies": ["@base-ui/react"],
+      "files": [
+        { "path": "src/components/ui/collapsible.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "description": "Campo com ícones, textos e botões acoplados",
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["button", "input", "textarea"],
+      "files": [
+        { "path": "src/components/ui/input-group.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "input-otp",
+      "type": "registry:ui",
+      "title": "Input OTP",
+      "description": "Campo de código de uso único em células separadas",
+      "dependencies": ["input-otp", "lucide-react"],
+      "files": [
+        { "path": "src/components/ui/input-otp.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "otp-input",
+      "type": "registry:ui",
+      "title": "OTP Input",
+      "description": "Campo de código numérico (OTP) com a identidade Modo Corre e estado de erro",
+      "dependencies": ["input-otp"],
+      "registryDependencies": ["input-otp"],
+      "files": [
+        { "path": "src/components/ui/otp-input.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "description": "Grupo de opções em botões (Base UI Radio)",
+      "dependencies": ["@base-ui/react"],
+      "files": [
+        { "path": "src/components/ui/radio-group.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Tabela com rolagem horizontal e cabeçalho, linhas e células estilizados",
+      "dependencies": [],
+      "files": [
+        { "path": "src/components/ui/table.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "form-message",
+      "type": "registry:ui",
+      "title": "Form Message",
+      "description": "Mensagem de erro ou sucesso de formulário",
+      "dependencies": [],
+      "files": [
+        { "path": "src/components/ui/form-message.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "login-button",
+      "type": "registry:ui",
+      "title": "Login Button",
+      "description": "Botão principal das telas de login, com carregamento",
+      "dependencies": [],
+      "registryDependencies": ["button"],
+      "files": [
+        { "path": "src/components/ui/login-button.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "phone-input",
+      "type": "registry:ui",
+      "title": "Phone Input",
+      "description": "Campo de celular brasileiro com DDD e máscara",
+      "dependencies": [],
+      "registryDependencies": ["input-group"],
+      "files": [
+        { "path": "src/components/ui/phone-input.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "login-phone-step",
+      "type": "registry:ui",
+      "title": "Login Phone Step",
+      "description": "Primeiro passo do login: celular e envio do código",
+      "dependencies": [],
+      "registryDependencies": ["field", "form-message", "login-button", "phone-input"],
+      "files": [
+        { "path": "src/components/ui/login-phone-step.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "login-code-step",
+      "type": "registry:ui",
+      "title": "Login Code Step",
+      "description": "Segundo passo do login: código OTP, reenvio e volta ao celular",
+      "dependencies": ["input-otp"],
+      "registryDependencies": ["button", "form-message", "login-button", "otp-input"],
+      "files": [
+        { "path": "src/components/ui/login-code-step.tsx", "type": "registry:ui" }
+      ]
     }
   ]
 }

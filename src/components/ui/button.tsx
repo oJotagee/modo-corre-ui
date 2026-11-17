@@ -1,5 +1,7 @@
+import * as React from "react";
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
@@ -43,14 +45,29 @@ function Button({
   className,
   variant = "default",
   size = "default",
+  isLoading = false,
+  loadingLabel,
+  disabled,
+  children,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & {
+    /** Mostra um indicador de carregamento e desabilita o botão. */
+    isLoading?: boolean;
+    /** Texto exibido no lugar de `children` enquanto carrega. */
+    loadingLabel?: React.ReactNode;
+  }) {
   return (
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
+      disabled={disabled || isLoading}
+      aria-busy={isLoading || undefined}
       {...props}
-    />
+    >
+      {isLoading ? <Loader2 aria-hidden className="animate-spin" /> : null}
+      {isLoading ? (loadingLabel ?? children) : children}
+    </ButtonPrimitive>
   );
 }
 

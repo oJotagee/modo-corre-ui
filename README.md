@@ -67,9 +67,26 @@ npx shadcn@latest add @modo-corre/button
 
 ## Componentes disponíveis
 
-`Avatar`, `Badge`, `Breadcrumb`, `Button`, `Card`, `Checkbox`, `Dialog`, `DropdownMenu`, `Field`, `Input`, `Item`, `Label`, `Pagination`, `Select`, `Sheet`, `Sidebar`, `Skeleton`, `Switch`, `Textarea` e `Toaster` (Sonner).
+`AlertDialog`, `Avatar`, `Badge`, `Breadcrumb`, `Button`, `Card`, `Checkbox`, `Collapsible`, `Dialog`, `DropdownMenu`, `Field`, `FormMessage`, `Input`, `InputGroup`, `InputOTP`, `Item`, `Label`, `LoginButton`, `LoginCodeStep`, `LoginPhoneStep`, `OtpInput`, `PhoneInput`, `Pagination`, `RadioGroup`, `Select`, `Sheet`, `Sidebar`, `Skeleton`, `Switch`, `Table`, `Textarea` e `Toaster` (Sonner).
 
 Já disponíveis como elementos no Bubble: **MC Button**, **MC Badge**, **MC Input**, **MC Pagination**, **MC Sidebar** e **MC User Menu**. Detalhes em [`bubble/README.md`](./bubble/README.md#elementos).
+
+### Login padrão (celular + código)
+
+`LoginPhoneStep` e `LoginCodeStep` montam o login por celular e código de uso único igual em todos os apps. Eles cuidam de máscara, validação, envio automático do código, contagem para reenviar e estados de erro; a chamada à api fica com o app:
+
+```tsx
+<LoginPhoneStep onSubmit={(phone) => requestCode(phone)} />
+<LoginCodeStep
+  phone={phone}
+  resendAvailableAt={resendAvailableAt}
+  onVerify={(code) => verifyCode(phone, code)}
+  onResend={() => requestCode(phone)}
+  onBack={() => setPhone(null)}
+/>
+```
+
+Também exporta utilitários sem React: `normalizePhone`, `formatPhoneInput`, `maskPhone`, `formatCents`, `parseBRLToCents`, `maskBRLInput`, `formatPlate`, `normalizePlate`, `formatOrderDate`, `formatDateTime` e `isValidIsoDate`.
 
 ## Como o projeto está organizado
 
