@@ -69,7 +69,7 @@ function OtpInput({
 
 /** Indica se o texto já tem exatamente `length` dígitos. */
 function isOtpComplete(value: string, length: number): boolean {
-  return new RegExp(`^\d{${length}}$`).test(value)
+  return /^\d+$/.test(value) && value.length === length
 }
 
 export { OtpInput, isOtpComplete }
